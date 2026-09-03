@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 학습 도구 모음</title>
+<style>
+:root {
+  --bg: #0f1420;
+  --panel: #171d2c;
+  --panel-2: #1e2637;
+  --line: #2c3549;
+  --text: #e6ebf5;
+  --muted: #8f9bb3;
+  --pos: #4b9fff;
+  --accent: #ffc857;
+  --ok: #4ade80;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.6 "Pretendard", "Malgun Gothic", -apple-system, system-ui, sans-serif;
+}
+.wrap { max-width: 880px; margin: 0 auto; padding: 56px 20px 80px; }
+
+header h1 {
+  font-size: 26px;
+  margin: 0 0 10px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+header p {
+  margin: 0;
+  color: var(--muted);
+  max-width: 60ch;
+}
+.rule { height: 1px; background: var(--line); margin: 32px 0; }
+
+.grid { display: grid; gap: 14px; }
+
+a.card {
+  display: block;
+  padding: 20px 22px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .15s, background .15s, transform .15s;
+}
+a.card:hover {
+  border-color: var(--pos);
+  background: var(--panel-2);
+  transform: translateY(-1px);
+}
+.card h2 {
+  font-size: 16px;
+  margin: 0 0 6px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.card p { margin: 0; color: var(--muted); font-size: 13px; }
+.tags { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
+.tag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  color: var(--muted);
+}
+a.card:hover .tag { border-color: #3a465e; }
+
+.soon {
+  padding: 20px 22px;
+  border: 1px dashed var(--line);
+  border-radius: 10px;
+  color: var(--muted);
+  font-size: 13px;
+}
+.soon b { color: var(--text); font-weight: 600; display: block; margin-bottom: 4px; font-size: 14px; }
+
+footer {
+  margin-top: 44px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 12px;
+}
+footer a { color: var(--pos); text-decoration: none; }
+footer a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <h1>AI 학습 도구 모음</h1>
+  <p>AI 가 어떻게 동작하는지 직접 눈으로 보면서 이해하려고 만든 도구들입니다.
+     설치할 것도, 서버도 필요 없습니다. 링크를 누르면 브라우저에서 바로 돌아갑니다.</p>
+</header>
+
+<div class="rule"></div>
+
+<div class="grid">
+
+  <a class="card" href="micrograd/">
+    <h2>신경망 학습 과정 시각화 — micrograd-js</h2>
+    <p>가중치가 하나씩 조절되면서 정답률이 올라가는 과정을 스텝 단위로 봅니다.
+       forward → loss → backward → update 네 단계를 따로 끊어서 볼 수 있고,
+       결정 경계와 학습 곡선이 실시간으로 함께 그려집니다.</p>
+    <div class="tags">
+      <span class="tag">역전파</span>
+      <span class="tag">경사하강법</span>
+      <span class="tag">MLP</span>
+      <span class="tag">이진 분류</span>
+    </div>
+  </a>
+
+  <div class="soon">
+    <b>다음 도구 준비 중</b>
+    새로운 도구가 추가되면 여기에 올라옵니다.
+  </div>
+
+</div>
+
+<footer>
+  소스 전체는 <a href="https://github.com/skaehdgnl2005-ai/ai-learning">GitHub</a> 에 있습니다.
+</footer>
+
+</div>
+</body>
+</html>

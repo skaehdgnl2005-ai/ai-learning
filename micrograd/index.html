@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>신경망 학습 과정 시각화 — micrograd-js</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header>
+  <h1>신경망 학습 과정 시각화
+    <small>micrograd 를 자바스크립트로 재구현 · 가중치가 조절되며 정답률이 오르는 과정</small>
+  </h1>
+  <div id="phase-badge">준비됨</div>
+  <div class="stats">
+    <div class="stat"><div class="k">스텝</div><div class="v" id="stat-step">0</div></div>
+    <div class="stat"><div class="k">손실 (loss)</div><div class="v" id="stat-loss">—</div></div>
+    <div class="stat"><div class="k">정답률</div><div class="v acc" id="stat-acc">—</div></div>
+  </div>
+</header>
+
+<main>
+  <aside class="sidebar">
+    <h2>데이터</h2>
+    <div class="field">
+      <label for="c-dataset">데이터셋</label>
+      <select id="c-dataset">
+        <option value="moons">초승달 (moons)</option>
+        <option value="circles">동심원 (circles)</option>
+        <option value="xor">XOR</option>
+        <option value="spiral">나선 (spiral)</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="c-n">점 개수 <b id="v-n">100</b></label>
+      <input type="range" id="c-n" min="50" max="300" step="10" value="100">
+    </div>
+    <div class="field">
+      <label for="c-noise">노이즈 <b id="v-noise">0.10</b></label>
+      <input type="range" id="c-noise" min="0" max="0.4" step="0.01" value="0.1">
+    </div>
+    <div class="field">
+      <label for="c-seed">시드</label>
+      <input type="number" id="c-seed" value="1" min="1" step="1">
+    </div>
+
+    <h2>모델</h2>
+    <div class="field">
+      <label for="c-hidden">은닉층 크기 (2개 층)</label>
+      <select id="c-hidden">
+        <option value="4">4, 4</option>
+        <option value="8">8, 8</option>
+        <option value="16" selected>16, 16</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="c-act">활성화 함수</label>
+      <select id="c-act">
+        <option value="relu" selected>ReLU</option>
+        <option value="tanh">tanh</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>파라미터 <b id="v-params">337</b></label>
+    </div>
+
+    <h2>학습</h2>
+    <div class="field">
+      <label for="c-lr">학습률 (lr) <b id="v-lr">0.50</b></label>
+      <input type="range" id="c-lr" min="0.01" max="5" step="0.01" value="0.5">
+    </div>
+    <div class="field">
+      <label for="c-speed">재생 속도 <b id="v-speed">15 스텝/초</b></label>
+      <input type="range" id="c-speed" min="1" max="60" step="1" value="15">
+    </div>
+
+    <div class="btns">
+      <button id="b-play" class="primary">▶ 재생</button>
+      <div class="btns row">
+        <button id="b-step">1 스텝</button>
+        <button id="b-sub">부분 스텝 ▸</button>
+      </div>
+      <button id="b-reset">↺ 초기화</button>
+    </div>
+  </aside>
+
+  <div class="panels">
+    <div class="card" id="net-wrap">
+      <h3>네트워크 <span id="net-sub">굵기 = |w|, 색 = 부호 · 마우스를 올리면 값이 보입니다</span></h3>
+      <canvas id="cv-net" height="360"></canvas>
+      <div class="legend">
+        <span><i style="background:#4b9fff"></i>양(+) 가중치</span>
+        <span><i style="background:#ff6b6b"></i>음(−) 가중치</span>
+        <span><i style="background:#ffc857"></i>역전파 단계: grad 오버레이</span>
+        <span>노드에 마우스를 올리면 그 뉴런의 활성 히트맵이 아래 데이터 화면에 겹쳐집니다</span>
+      </div>
+    </div>
+
+    <div class="row2">
+      <div class="card">
+        <h3>데이터와 결정 경계 <span id="data-sub"></span></h3>
+        <canvas id="cv-data" height="380"></canvas>
+        <div class="legend">
+          <span><i style="background:#4b9fff"></i>라벨 +1</span>
+          <span><i style="background:#ff6b6b"></i>라벨 −1</span>
+          <span><i style="background:#ffc857"></i>오분류(테두리 강조)</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>학습 곡선 <span>손실은 로그 스케일</span></h3>
+        <canvas id="cv-chart" height="380"></canvas>
+        <div class="legend">
+          <span><i style="background:#ffc857"></i>손실 (loss)</span>
+          <span><i style="background:#4ade80"></i>정답률 (accuracy)</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="tooltip"></div>
+
+<footer>
+  한 스텝은 <code>forward → loss → backward → update</code> 4단계입니다.
+  “부분 스텝”을 반복해서 누르면 각 단계를 따로 볼 수 있습니다.
+  손실은 강의 데모와 같은 SVM max-margin hinge loss + L2 정규화(alpha=1e-4)입니다.
+</footer>
+
+<script src="src/rng.js"></script>
+<script src="src/engine.js"></script>
+<script src="src/nn.js"></script>
+<script src="src/datasets.js"></script>
+<script src="src/trainer.js"></script>
+<script src="src/viz-network.js"></script>
+<script src="src/viz-data.js"></script>
+<script src="src/viz-chart.js"></script>
+<script src="src/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{
+  "name": "micrograd-js-viz",
+  "version": "1.0.0",
+  "private": true,
+  "description": "신경망 학습 과정 시각화 — micrograd 를 자바스크립트로 재구현",
+  "scripts": {
+    "test": "node --test test/engine.test.js test/nn.test.js"
+  }
+}

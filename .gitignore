@@ -1,0 +1,17 @@
+# 의존성
+node_modules/
+
+# 도구 실행 부산물
+.gstack/
+
+# OS / 편집기
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+.idea/
+*.swp
+
+# 로그
+*.log
+npm-debug.log*
