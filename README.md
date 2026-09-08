@@ -38,4 +38,4 @@ cd micrograd && npm test     # node --test → 20 pass
 
 - 무빌드 · 무서버 · 무의존. 배포는 GitHub Pages에 push하는 것이 전부입니다.
 - 엔진과 시각화의 경계를 지킵니다. 새 도구는 이 경계를 그대로 따릅니다.
-- 관련 노트: [micrograd 강의 정리 (한국어)](https://github.com/skaehdgnl2005-ai/micrograd-lecture-notes-ko)
+- 관련 노트: [micrograd 강의 정리 (한국어)](https://github.com/skaehdgnl2005-ai/ai-experiments/tree/main/micrograd-lecture-notes-ko)
