@@ -2,6 +2,8 @@
 
 AI 가 어떻게 동작하는지 직접 눈으로 보면서 이해하려고 만드는 시각화 도구 모음입니다.
 
+> Zero-dependency browser visualizations of how AI actually works. First tool: a scalar autograd engine (micrograd) reimplemented in JS, training a neural net step by step.
+
 **▶ https://skaehdgnl2005-ai.github.io/ai-learning/**
 
 빌드 과정도, 서버도, 설치할 패키지도 없습니다. 전부 순수 HTML + 자바스크립트라
@@ -22,10 +24,18 @@ AI 가 어떻게 동작하는지 직접 눈으로 보면서 이해하려고 만�
 
 폴더 안에서는 상대 경로만 쓰면 됩니다. 별도 설정은 없습니다.
 
-## 테스트
+## 어떻게 검증했나
 
-도구별로 테스트가 있는 경우 해당 폴더에서 실행합니다.
+- 자동미분 엔진(`micrograd/src/engine.js`)과 신경망 층(`nn.js`)은 Node 내장 테스트 러너로 검증합니다. 현재 20개 테스트 통과.
+- 시드 고정 RNG(`rng.js`)로 데모가 매번 같은 궤적을 재현합니다.
+- 시각화 레이어(`viz-*.js`)는 엔진과 완전히 분리되어 있어 엔진만 단독 테스트할 수 있습니다.
 
 ```
-cd micrograd && npm test
+cd micrograd && npm test     # node --test → 20 pass
 ```
+
+## 설계 원칙
+
+- 무빌드 · 무서버 · 무의존. 배포는 GitHub Pages에 push하는 것이 전부입니다.
+- 엔진과 시각화의 경계를 지킵니다. 새 도구는 이 경계를 그대로 따릅니다.
+- 관련 노트: [micrograd 강의 정리 (한국어)](https://github.com/skaehdgnl2005-ai/micrograd-lecture-notes-ko)
